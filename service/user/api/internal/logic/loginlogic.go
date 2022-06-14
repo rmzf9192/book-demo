@@ -1,9 +1,9 @@
 package logic
 
 import (
+	"book-demo/common/errorx"
 	"book-demo/service/user/model"
 	"context"
-	"errors"
 	"github.com/golang-jwt/jwt/v4"
 	"strings"
 	"time"
@@ -30,20 +30,20 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 
 func (l *LoginLogic) Login(req *types.LoginReq) (*types.LoginReply, error) {
 	if len(strings.TrimSpace(req.Username)) == 0 || len(strings.TrimSpace(req.Password)) == 0 {
-		return nil, errors.New("参数错误")
+		return nil, errorx.NewDefaultError("参数错误")
 	}
 
 	userInfo, err := l.svcCtx.UserModel.FindOneByNumber(l.ctx, req.Username)
 	switch err {
 	case nil:
 	case model.ErrNotFound:
-		return nil, errors.New("用户名不存在")
+		return nil, errorx.NewDefaultError("用户名不存在")
 	default:
 		return nil, err
 	}
 
 	if userInfo.Password != req.Password {
-		return nil, errors.New("用户密码不正确")
+		return nil, errorx.NewDefaultError("用户密码不正确")
 	}
 
 	// ---start---

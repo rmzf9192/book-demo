@@ -4,3 +4,8 @@ Port: 8889
 Auth:
   AccessSecret: elzz123456
   AccessExpire: 3600
+UserRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: user.rpc
